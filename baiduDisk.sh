@@ -21,7 +21,7 @@ function genSubdirOfNameToFile() {
 	sed -i 1d tmp
 	sed -i s/\ $//g tmp
 	sed -i s/\ /==/g tmp
-	cat tmp | awk -F == '{$NF=$(NF-1)=$(NF-2)=""; print $0}' &>> $G_FILENAME.file && rm -f tmp
+	cat tmp | awk -F == '{$NF=$(NF-1)=$(NF-2)=""; print $0}' &> $G_FILENAME.file && rm -f tmp
 }
 
 # 参数：西__瓜[[豆__芽
@@ -66,18 +66,10 @@ function recursion() {
 	done
 }
 
-#ROOTDIR='西==瓜[[豆==芽'
-#ROOTDIR='西==瓜[[豆==苗'
-#ROOTDIR='西==瓜[[西==瓜==独==享'
-#ROOTDIR='西==瓜[[豆==花'
 ROOTDIR=$1
-#ROOTDIR='西==瓜[[网==易'
-#ROOTDIR='17年赛普健身学院文件'
-#ROOTDIR='test'
-if [ ! -d $ROOTDIR-tmp ]; then
-	mkdir $ROOTDIR-tmp
+if [ ! -d /opt/$ROOTDIR-tmp ]; then
+	mkdir /opt/$ROOTDIR-tmp
 fi
-pushd $ROOTDIR-tmp
-#genSubdirOfNameToFile $ROOTDIR
+pushd /opt/$ROOTDIR-tmp
 recursion $ROOTDIR
 popd
