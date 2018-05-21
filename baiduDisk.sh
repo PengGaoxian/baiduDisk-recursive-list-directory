@@ -29,7 +29,6 @@ function genSubdirOfNameToFile() {
 function recursion() {
 	genSubdirOfNameToFile $1
 
-		echo $1
 	R_FILE1=${1%[[*}
 	R_FILE2=${R_FILE1##*[[}
 	R_FILE3=${1##*[[}
@@ -68,7 +67,7 @@ function recursion() {
 
 #ROOTDIR='西==瓜[[豆==芽'
 #ROOTDIR='17年赛普健身学院文件'
-ROOTDIR='test[[test0[[test00'
+ROOTDIR='test'
 if [ ! -d WangKe-tmp ]; then
 	mkdir WangKe-tmp
 fi
