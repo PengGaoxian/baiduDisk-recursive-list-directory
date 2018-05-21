@@ -61,7 +61,7 @@ function recursion() {
 			R_WHOLEDIRNAME=$R_PREFIX[[${R_DIRNAME//\ /\\ }
 			recursion $R_WHOLEDIRNAME
 		else
-			echo $R_PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/$ROOTDIR.txt
+			echo $R_PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/$ROOTDIR`date +%Y%m%d`.txt
 		fi
 	done
 }
