@@ -21,7 +21,7 @@ function genSubdirOfNameToFile() {
 	sed -i 1d tmp
 	sed -i s/\ $//g tmp
 	sed -i s/\ /==/g tmp
-	cat tmp | awk -F == '{$NF=$(NF-1)=$(NF-2)=""; print $0}' &> $G_FILENAME.file && rm -f tmp
+	cat tmp | awk -F == '{$NF=$(NF-1)=$(NF-2)=""; print $0}' &>> $G_FILENAME.file && rm -f tmp
 }
 
 # 参数：西__瓜[[豆__芽
