@@ -43,7 +43,8 @@ function recursion() {
 		# 特殊字符处理
 		R_DIRNAME2=${R_DIRNAME1// /==}
 		R_DIRNAME3=${R_DIRNAME2////[[}
-		R_DIRNAME=${R_DIRNAME3//\'/\\\'}
+		R_DIRNAME4=${R_DIRNAME3//\'/\\\'}
+		R_DIRNAME=${R_DIRNAME4//-/\\-}
 
 		R_FILENAME1=${1%[[*}
 		R_FILENAME2=${R_FILENAME1##*[[}
@@ -60,18 +61,23 @@ function recursion() {
 			R_WHOLEDIRNAME=$R_PREFIX[[${R_DIRNAME//\ /\\ }
 			recursion $R_WHOLEDIRNAME
 		else
-			echo $R_PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/WangKe.txt
+			echo $R_PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/$ROOTDIR.txt
 		fi
 	done
 }
 
 #ROOTDIR='西==瓜[[豆==芽'
+#ROOTDIR='西==瓜[[豆==苗'
+#ROOTDIR='西==瓜[[西==瓜==独==享'
+#ROOTDIR='西==瓜[[豆==花'
+ROOTDIR=$1
+#ROOTDIR='西==瓜[[网==易'
 #ROOTDIR='17年赛普健身学院文件'
-ROOTDIR='test'
-if [ ! -d WangKe-tmp ]; then
-	mkdir WangKe-tmp
+#ROOTDIR='test'
+if [ ! -d $ROOTDIR-tmp ]; then
+	mkdir $ROOTDIR-tmp
 fi
-pushd WangKe-tmp
+pushd $ROOTDIR-tmp
 #genSubdirOfNameToFile $ROOTDIR
 recursion $ROOTDIR
 popd
