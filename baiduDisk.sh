@@ -6,7 +6,15 @@ function genSubdirOfNameToFile() {
 	G_PARAM1=${1//[[//}
 	G_PARAM=${G_PARAM1//==/\\ }	
 	G_PREFIX=$1
-	G_FILENAME=${1##*[[}
+	G_FILENAME1=${1%[[*}
+	G_FILENAME2=${G_FILENAME1##*[[}
+	G_FILENAME3=${1##*[[}
+	if [ ! -z $G_FILENAME2 ]; then
+		G_FILENAME=$G_FILENAME2'[['$G_FILENAME3
+	else
+		G_FILENAME=$G_FILENAME3
+	fi
+
 # 将路径前缀存入文件的首行
 	echo $G_PREFIX > $G_FILENAME.file
 	echo $G_PARAM | xargs bypy list > tmp
@@ -21,7 +29,15 @@ function genSubdirOfNameToFile() {
 function recursion() {
 	genSubdirOfNameToFile $1
 
-	R_FILE=${1##*[[}.file
+		echo $1
+	R_FILE1=${1%[[*}
+	R_FILE2=${R_FILE1##*[[}
+	R_FILE3=${1##*[[}
+	if [ ! -z $R_FILE2 ]; then
+		R_FILE=$R_FILE2'[['$R_FILE3.file
+	else
+		R_FILE=$R_FILE3.file
+	fi
 	sed 1d $R_FILE | while read line; do
 		R_FLAG=${line:0:1}
 		R_DIRNAME1=${line:2}
@@ -30,7 +46,15 @@ function recursion() {
 		R_DIRNAME3=${R_DIRNAME2////[[}
 		R_DIRNAME=${R_DIRNAME3//\'/\\\'}
 
-		R_FILENAME=${1##*[[}
+		R_FILENAME1=${1%[[*}
+		R_FILENAME2=${R_FILENAME1##*[[}
+		R_FILENAME3=${1##*[[}
+		if [ ! -z $R_FILENAME2 ]; then
+			R_FILENAME=$R_FILENAME2'[['$R_FILENAME3
+		else
+			R_FILENAME=$R_FILENAME3
+		fi
+
 		R_PREFIX=`head -1 $R_FILENAME.file`
 
 		if [ $R_FLAG == 'D' ]; then
@@ -44,7 +68,7 @@ function recursion() {
 
 #ROOTDIR='西==瓜[[豆==芽'
 #ROOTDIR='17年赛普健身学院文件'
-ROOTDIR='test'
+ROOTDIR='test[[test0[[test00'
 if [ ! -d WangKe-tmp ]; then
 	mkdir WangKe-tmp
 fi
