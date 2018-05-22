@@ -13,7 +13,6 @@ function genSubdirOfNameToFile() {
 		G_STR=$i'[['$G_STR
 	done
 	G_FILENAME=${G_STR%[[*}
-	echo $G_FILENAME
 
 # 将路径前缀存入文件的首行
 	echo $G_PREFIX > $G_FILENAME.file
