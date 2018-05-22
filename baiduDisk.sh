@@ -6,14 +6,14 @@ function genSubdirOfNameToFile() {
 	G_PARAM1=${1//[[//}
 	G_PARAM=${G_PARAM1//==/\\ }	
 	G_PREFIX=$1
-	G_FILENAME1=${1%[[*}
-	G_FILENAME2=${G_FILENAME1##*[[}
-	G_FILENAME3=${1##*[[}
-	if [ ! -z $G_FILENAME2 ]; then
-		G_FILENAME=$G_FILENAME2'[['$G_FILENAME3
-	else
-		G_FILENAME=$G_FILENAME3
-	fi
+
+	G_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
+	G_STR=''
+	for i in $G_LIST; do
+		G_STR=$i'[['$G_STR
+	done
+	G_FILENAME=${G_STR%[[*}
+	echo $G_FILENAME
 
 # 将路径前缀存入文件的首行
 	echo $G_PREFIX > $G_FILENAME.file
@@ -29,14 +29,13 @@ function genSubdirOfNameToFile() {
 function recursion() {
 	genSubdirOfNameToFile $1
 
-	R_FILE1=${1%[[*}
-	R_FILE2=${R_FILE1##*[[}
-	R_FILE3=${1##*[[}
-	if [ ! -z $R_FILE2 ]; then
-		R_FILE=$R_FILE2'[['$R_FILE3.file
-	else
-		R_FILE=$R_FILE3.file
-	fi
+	R_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
+	R_STR=''
+	for i in $R_LIST; do
+		R_STR=$i'[['$R_STR
+	done
+	R_FILE=${R_STR%[[*}.file
+
 	sed 1d $R_FILE | while read line; do
 		R_FLAG=${line:0:1}
 		R_DIRNAME1=${line:2}
@@ -46,14 +45,12 @@ function recursion() {
 		R_DIRNAME4=${R_DIRNAME3//\'/\\\'}
 		R_DIRNAME=${R_DIRNAME4//-/\\-}
 
-		R_FILENAME1=${1%[[*}
-		R_FILENAME2=${R_FILENAME1##*[[}
-		R_FILENAME3=${1##*[[}
-		if [ ! -z $R_FILENAME2 ]; then
-			R_FILENAME=$R_FILENAME2'[['$R_FILENAME3
-		else
-			R_FILENAME=$R_FILENAME3
-		fi
+		R_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
+		R_STR=''
+		for i in $R_LIST; do
+			R_STR=$i'[['$R_STR
+		done
+		R_FILENAME=${R_STR%[[*}
 
 		R_PREFIX=`head -1 $R_FILENAME.file`
 
