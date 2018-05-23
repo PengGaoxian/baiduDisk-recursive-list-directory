@@ -7,8 +7,8 @@ function genSubdirOfNameToFile() {
 	PARAM1=${1//[[//}
 	PARAM=${PARAM1//==/\\ }	
 
-	if [ ${#1} -gt 106 ]; then
-		G_FILENAME=${1:((${#1}-106))}
+	if [ ${#1} -gt 83 ]; then
+		G_FILENAME=${1:((${#1}-83))}
 	else
 		G_FILENAME=$1
 	fi
@@ -28,8 +28,8 @@ function genSubdirOfNameToFile() {
 function recursion() {
 	genSubdirOfNameToFile $1
 
-	if [ ${#1} -gt 106 ]; then
-		FILENAME=${1:((${#1}-106))}
+	if [ ${#1} -gt 83 ]; then
+		FILENAME=${1:((${#1}-83))}
 	else
 		FILENAME=$1
 	fi
@@ -43,8 +43,8 @@ function recursion() {
 		DIRNAME4=${DIRNAME3//\'/\\\'}
 		DIRNAME=${DIRNAME4//-/\\-}
 
-		if [ ${#1} -gt 106 ]; then
-			FILENAME=${1:((${#1}-106))}
+		if [ ${#1} -gt 83 ]; then
+			FILENAME=${1:((${#1}-83))}
 		else
 			FILENAME=$1
 		fi
