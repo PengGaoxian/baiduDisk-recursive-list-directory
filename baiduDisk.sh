@@ -3,20 +3,20 @@
 # 参数：目录的绝对路径；例如：'西==瓜[[豆==芽'
 # 功能：生成'西==瓜[[豆==芽.file'，其中包含该目录的所有子目录
 function genSubdirOfNameToFile() {
-	G_PARAM1=${1//[[//}
-	G_PARAM=${G_PARAM1//==/\\ }	
-	G_PREFIX=$1
+# 将[[字符转换成/，将==字符转换成空格
+	PARAM1=${1//[[//}
+	PARAM=${PARAM1//==/\\ }	
 
-	G_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
-	G_STR=''
-	for i in $G_LIST; do
-		G_STR=$i'[['$G_STR
-	done
-	G_FILENAME=${G_STR%[[*}
+	if [ ${#1} -gt 106 ]; then
+		G_FILENAME=${1:((${#1}-106))}
+	else
+		G_FILENAME=$1
+	fi
 
 # 将路径前缀存入文件的首行
-	echo $G_PREFIX > $G_FILENAME.file
-	echo $G_PARAM | xargs bypy list > tmp
+	echo $1 > $G_FILENAME.file
+# 列出目录写入临时文件tmp中，去除tmp文件首行信息，追加到FILENAME.file中
+	echo $PARAM | xargs bypy list > tmp
 	sed -i 1d tmp
 	sed -i s/\ $//g tmp
 	sed -i s/\ /==/g tmp
@@ -28,36 +28,34 @@ function genSubdirOfNameToFile() {
 function recursion() {
 	genSubdirOfNameToFile $1
 
-	R_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
-	R_STR=''
-	for i in $R_LIST; do
-		R_STR=$i'[['$R_STR
-	done
-	R_FILE=${R_STR%[[*}.file
-
-	sed 1d $R_FILE | while read line; do
-		R_FLAG=${line:0:1}
-		R_DIRNAME1=${line:2}
+	if [ ${#1} -gt 106 ]; then
+		FILENAME=${1:((${#1}-106))}
+	else
+		FILENAME=$1
+	fi
+	sed 1d $FILENAME.file | while read line; do
+		FLAG=${line:0:1}
+		DIRNAME1=${line:2}
+		# 将空格转换成==字符，将/字符转换成[[字符
+		DIRNAME2=${DIRNAME1// /==}
+		DIRNAME3=${DIRNAME2////[[}
 		# 特殊字符处理
-		R_DIRNAME2=${R_DIRNAME1// /==}
-		R_DIRNAME3=${R_DIRNAME2////[[}
-		R_DIRNAME4=${R_DIRNAME3//\'/\\\'}
-		R_DIRNAME=${R_DIRNAME4//-/\\-}
+		DIRNAME4=${DIRNAME3//\'/\\\'}
+		DIRNAME=${DIRNAME4//-/\\-}
 
-		R_LIST=`echo $1 | awk -F '\\\[\\\[' '{for(i=NF; i>(NF-4>0?NF-4:0); i--) {print $i}}'`
-		R_STR=''
-		for i in $R_LIST; do
-			R_STR=$i'[['$R_STR
-		done
-		R_FILENAME=${R_STR%[[*}
-
-		R_PREFIX=`head -1 $R_FILENAME.file`
-
-		if [ $R_FLAG == 'D' ]; then
-			R_WHOLEDIRNAME=$R_PREFIX[[${R_DIRNAME//\ /\\ }
-			recursion $R_WHOLEDIRNAME
+		if [ ${#1} -gt 106 ]; then
+			FILENAME=${1:((${#1}-106))}
 		else
-			echo $R_PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/$ROOTDIR`date +%Y%m%d`.txt
+			FILENAME=$1
+		fi
+
+		PREFIX=`head -1 $FILENAME.file`
+
+		if [ $FLAG == 'D' ]; then
+			WHOLEDIRNAME=$PREFIX[[${DIRNAME//\ /\\ }
+			recursion $WHOLEDIRNAME
+		else
+			echo $PREFIX[[$line | awk '{$NF=""; print $0}' >> /opt/$ROOTDIR`date +%Y%m%d`.txt
 		fi
 	done
 }
